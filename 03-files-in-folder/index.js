@@ -5,16 +5,19 @@ let newDir = path.join(__dirname, 'secret-folder')
 
 fs.readdir(newDir, {withFileTypes: true}, (err, files) => {
     files.forEach(el => {
-        fs.stat(newDir, (err, statistic) => {
-            if(el.isFile()){
-                let nameOfFile = path.parse(newDir).name
-                let exOfFile = path.extname(newDir).slice(1)
-                let sizeOfFile = statistic.size
-    
-                console.log(nameOfFile + '-' + exOfFile + '-' + sizeOfFile + 'kB')
-            }else{
-                console.log(err)
-            }
-        })
+        if(el.isFile()){
+
+            let nameOfFile = path.parse(el.name).name
+            let exOfFile = path.extname(el.name).slice(1)
+
+            fs.stat(newDir + '/' + el.name , (err, stats) => {
+                let sizeOfFile = stats.size
+                console.log(nameOfFile + '-' + exOfFile + '-' + Math.round(sizeOfFile/1024) + 'kB')
+            })
+
+            
+        }else{
+            return
+        }
     })
 })
